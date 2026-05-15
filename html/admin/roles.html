@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — Roles | Portal S3Integración</title>
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body class="admin-body">
+  <div class="ambient-layer" aria-hidden="true">
+    <span class="orb orb-a"></span><span class="orb orb-b"></span>
+    <span class="orb orb-c"></span><span class="grid-wash"></span>
+  </div>
+  <div class="admin-layout">
+    <nav class="admin-nav" id="adminNav" aria-label="Navegación de administración">
+      <div class="nav-brand">S3 Admin</div>
+      <span class="nav-section-label">Principal</span>
+      <ul class="admin-nav-list"><li><a href="/admin"><span class="nav-icon">📊</span>Dashboard</a></li></ul>
+      <span class="nav-section-label">Usuarios y acceso</span>
+      <ul class="admin-nav-list">
+        <li><a href="/admin/users"><span class="nav-icon">👥</span>Usuarios</a></li>
+        <li><a href="/admin/roles"><span class="nav-icon">🏷️</span>Roles</a></li>
+        <li><a href="/admin/permissions"><span class="nav-icon">🔑</span>Permisos</a></li>
+        <li><a href="/admin/sessions"><span class="nav-icon">🖥️</span>Sesiones</a></li>
+        <li><a href="/admin/tokens"><span class="nav-icon">🔐</span>Tokens API</a></li>
+      </ul>
+      <span class="nav-section-label">Datos</span>
+      <ul class="admin-nav-list">
+        <li><a href="/admin/orders"><span class="nav-icon">📦</span>Órdenes</a></li>
+        <li><a href="/admin/order-not-registered"><span class="nav-icon">🔍</span>No registradas</a></li>
+        <li><a href="/admin/order-not-delivered"><span class="nav-icon">🚚</span>En tránsito</a></li>
+        <li><a href="/admin/imports"><span class="nav-icon">📥</span>Importaciones</a></li>
+        <li><a href="/admin/database"><span class="nav-icon">🗄️</span>Base de datos</a></li>
+      </ul>
+      <span class="nav-section-label">Sistema</span>
+      <ul class="admin-nav-list">
+        <li><a href="/admin/audit"><span class="nav-icon">📋</span>Auditoría</a></li>
+        <li><a href="/admin/security"><span class="nav-icon">🛡️</span>Seguridad</a></li>
+      </ul>
+      <div class="admin-nav-footer">
+        <button id="adminLogout" class="btn btn-danger btn-sm" type="button" style="width:100%">Cerrar sesión</button>
+      </div>
+    </nav>
+    <main class="admin-main">
+      <div class="admin-page-header">
+        <h1>Gestión de Roles</h1>
+        <div class="header-actions">
+          <button id="btnCreateRole" class="btn btn-primary btn-sm" type="button">+ Nuevo rol</button>
+        </div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-filter-bar">
+          <label>Buscar<input type="search" id="roleSearch" placeholder="Nombre del rol…" style="width:200px"></label>
+          <button id="btnSearch" class="btn btn-ghost btn-sm" style="align-self:flex-end">Buscar</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="rolesTable">
+            <thead><tr>
+              <th style="width:50px">ID</th><th>Nombre</th><th>Descripción</th>
+              <th>Estado</th><th>Permisos</th><th>Creado</th><th class="actions">Acciones</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="rolesPagination"></div>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="admin-modal" id="roleModal" style="position:relative">
+    <h2 id="roleModalTitle">Nuevo rol</h2>
+    <form id="roleForm" novalidate>
+      <input type="hidden" id="roleId">
+      <div class="form-group">
+        <label for="roleName">Nombre del rol</label>
+        <input type="text" id="roleName" required>
+      </div>
+      <div class="form-group">
+        <label for="roleDescription">Descripción</label>
+        <input type="text" id="roleDescription">
+      </div>
+      <div class="form-group">
+        <label class="toggle-wrap" style="flex-direction:row;text-transform:none;font-size:.9rem;font-weight:600">
+          <input type="checkbox" id="roleIsActive" checked> Rol activo
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Permisos asignados</label>
+        <div class="permission-grid" id="permissionsGrid"></div>
+      </div>
+      <div id="roleFormError" class="status-message" style="display:none"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost btn-sm" id="btnCancelRole">Cancelar</button>
+        <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/assets/js/admin-common.js" defer></script>
+  <script src="/assets/js/admin-roles.js" defer></script>
+</body>
+</html>

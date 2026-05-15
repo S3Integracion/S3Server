@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Portal S3Integracion | Home</title>
+    <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body class="home-body">
+    <div class="ambient-layer" aria-hidden="true">
+        <span class="orb orb-a"></span>
+        <span class="orb orb-b"></span>
+        <span class="orb orb-c"></span>
+        <span class="grid-wash"></span>
+    </div>
+
+    <main class="page-wrap home-shell">
+        <header class="panel home-header reveal">
+            <div>
+                <p class="kicker">Portal S3Integracion</p>
+                <h1>Centro de trabajo</h1>
+                <p class="lead">Tu sesion esta activa para consultar perfil, roles y permisos asignados.</p>
+            </div>
+            <button id="logoutButton" class="btn btn-danger" type="button">Cerrar sesion</button>
+        </header>
+
+        <section class="panel home-card reveal">
+            <h2>Perfil de usuario</h2>
+            <dl class="profile-grid">
+                <dt>ID</dt>
+                <dd id="profileId">-</dd>
+                <dt>Usuario</dt>
+                <dd id="profileUsername">-</dd>
+                <dt>Correo</dt>
+                <dd id="profileEmail">-</dd>
+                <dt>Ultimo acceso</dt>
+                <dd id="profileLastLogin">-</dd>
+            </dl>
+        </section>
+
+        <section class="split-grid reveal">
+            <article class="panel home-card">
+                <h2>Permisos activos</h2>
+                <ul id="permissionsList" class="pill-list"></ul>
+            </article>
+
+            <article class="panel home-card">
+                <h2>Roles activos</h2>
+                <ul id="rolesList" class="pill-list"></ul>
+            </article>
+        </section>
+
+        <section id="adminAccessSection" class="panel home-card reveal" style="display:none">
+            <h2>Administración del sistema</h2>
+            <p style="margin-bottom:1rem;color:var(--text-dim)">Tienes acceso al panel de administración.</p>
+            <a href="/admin" class="btn btn-primary">Ir al panel de administración →</a>
+        </section>
+
+        <p id="homeStatus" class="status-message home-status" role="status" aria-live="polite"></p>
+    </main>
+    <script src="/assets/js/home.js" defer></script>
+</body>
+</html>

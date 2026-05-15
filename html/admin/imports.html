@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — Importaciones | Portal S3Integración</title>
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body class="admin-body">
+  <div class="ambient-layer" aria-hidden="true">
+    <span class="orb orb-a"></span><span class="orb orb-b"></span>
+    <span class="orb orb-c"></span><span class="grid-wash"></span>
+  </div>
+  <div class="admin-layout">
+    <nav class="admin-nav" id="adminNav" aria-label="Navegación de administración">
+      <div class="nav-brand">S3 Admin</div>
+      <span class="nav-section-label">Principal</span>
+      <ul class="admin-nav-list"><li><a href="/admin"><span class="nav-icon">📊</span>Dashboard</a></li></ul>
+      <span class="nav-section-label">Usuarios y acceso</span>
+      <ul class="admin-nav-list">
+        <li><a href="/admin/users"><span class="nav-icon">👥</span>Usuarios</a></li>
+        <li><a href="/admin/roles"><span class="nav-icon">🏷️</span>Roles</a></li>
+        <li><a href="/admin/permissions"><span class="nav-icon">🔑</span>Permisos</a></li>
+        <li><a href="/admin/sessions"><span class="nav-icon">🖥️</span>Sesiones</a></li>
+        <li><a href="/admin/tokens"><span class="nav-icon">🔐</span>Tokens API</a></li>
+      </ul>
+      <span class="nav-section-label">Datos</span>
+      <ul class="admin-nav-list">
+        <li><a href="/admin/orders"><span class="nav-icon">📦</span>Órdenes</a></li>
+        <li><a href="/admin/order-not-registered"><span class="nav-icon">🔍</span>No registradas</a></li>
+        <li><a href="/admin/order-not-delivered"><span class="nav-icon">🚚</span>En tránsito</a></li>
+        <li><a href="/admin/imports"><span class="nav-icon">📥</span>Importaciones</a></li>
+        <li><a href="/admin/database"><span class="nav-icon">🗄️</span>Base de datos</a></li>
+      </ul>
+      <span class="nav-section-label">Sistema</span>
+      <ul class="admin-nav-list">
+        <li><a href="/admin/audit"><span class="nav-icon">📋</span>Auditoría</a></li>
+        <li><a href="/admin/security"><span class="nav-icon">🛡️</span>Seguridad</a></li>
+      </ul>
+      <div class="admin-nav-footer">
+        <button id="adminLogout" class="btn btn-danger btn-sm" type="button" style="width:100%">Cerrar sesión</button>
+      </div>
+    </nav>
+    <main class="admin-main">
+      <div class="admin-page-header"><h1>Corridas de Importación</h1></div>
+      <div class="admin-card">
+        <div class="admin-filter-bar">
+          <label>Estado<select id="importStatus">
+            <option value="">Todos</option>
+            <option value="pending">Pendiente</option>
+            <option value="processing">Procesando</option>
+            <option value="completed">Completado</option>
+            <option value="failed">Fallido</option>
+          </select></label>
+          <label>Usuario ID<input type="number" id="importUserId" placeholder="ID" style="width:80px"></label>
+          <label>Desde<input type="date" id="importFrom"></label>
+          <label>Hasta<input type="date" id="importTo"></label>
+          <button id="btnSearch" class="btn btn-ghost btn-sm" style="align-self:flex-end">Filtrar</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="importsTable">
+            <thead><tr>
+              <th style="width:60px">ID</th><th>UUID</th><th>Usuario</th><th>Modo</th>
+              <th>Filas</th><th>Insertados</th><th>Rechazados</th><th>Estado</th><th>Fecha</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="importsPagination"></div>
+      </div>
+
+      <!-- Import detail -->
+      <div id="importDetailSection" style="display:none">
+        <div class="admin-page-header" style="margin-top:.5rem">
+          <h2 id="importDetailTitle">Detalle de importación</h2>
+          <button id="btnCloseImportDetail" class="btn btn-ghost btn-sm">✕ Cerrar</button>
+        </div>
+        <div class="detail-panel" id="importInfoPanel"></div>
+        <div class="admin-card" id="importFailuresCard">
+          <div class="admin-card-header"><h2>Registros fallidos</h2></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table" id="failuresTable">
+              <thead><tr>
+                <th>#</th><th>Fila</th><th>Orden ID</th><th>Código error</th><th>Mensaje</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="pagination" id="failuresPagination"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="/assets/js/admin-common.js" defer></script>
+  <script src="/assets/js/admin-imports.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+set -eu
+
+blocked_files="$(git diff --cached --name-only --diff-filter=ACM | grep -Ei '(^|/).*\.sql$|(^|/)backups/' || true)"
+env_files="$(git diff --cached --name-only --diff-filter=ACM | grep -Ei '(^|/)\.env($|\.)' | grep -Ev '(^|/)\.env\.example$' || true)"
+
+if [ -n "$blocked_files$env_files" ]; then
+  echo "ERROR: intento de commit con archivos bloqueados:"
+  [ -n "$blocked_files" ] && echo "$blocked_files"
+  [ -n "$env_files" ] && echo "$env_files"
+  echo ""
+  echo "No se permiten .sql, .env reales ni backups en este repositorio."
+  echo ".env.example sí está permitido."
+  exit 1
+fi

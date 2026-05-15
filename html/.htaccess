@@ -1,0 +1,62 @@
+Options -Indexes
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Canonical URLs without .html extension.
+    RewriteCond %{THE_REQUEST} \s/+index\.html(?:[\s?]|$) [NC]
+    RewriteRule ^index\.html$ https://cybercomander.net/ [R=301,L]
+
+    RewriteCond %{THE_REQUEST} \s/+login\.html(?:[\s?]|$) [NC]
+    RewriteRule ^login\.html$ https://cybercomander.net/login [R=301,L]
+
+    RewriteCond %{THE_REQUEST} \s/+home\.html(?:[\s?]|$) [NC]
+    RewriteRule ^home\.html$ https://cybercomander.net/home [R=301,L]
+
+    # Canonical redirects for admin
+    RewriteCond %{THE_REQUEST} \s/+admin/index\.html(?:[\s?]|$) [NC]
+    RewriteRule ^admin/index\.html$ https://cybercomander.net/admin [R=301,L]
+
+    # Admin friendly routes (must be before static passthrough)
+    RewriteRule ^admin/?$              admin/index.html       [L]
+    RewriteRule ^admin/users/?$        admin/users.html       [L]
+    RewriteRule ^admin/roles/?$        admin/roles.html       [L]
+    RewriteRule ^admin/permissions/?$  admin/permissions.html [L]
+    RewriteRule ^admin/sessions/?$     admin/sessions.html    [L]
+    RewriteRule ^admin/audit/?$        admin/audit.html       [L]
+    RewriteRule ^admin/database/?$     admin/database.html    [L]
+    RewriteRule ^admin/orders/?$                admin/orders.html                [L]
+    RewriteRule ^admin/order-not-registered/?$  admin/order-not-registered.html  [L]
+    RewriteRule ^admin/order-not-delivered/?$   admin/order-not-delivered.html   [L]
+    RewriteRule ^admin/imports/?$               admin/imports.html               [L]
+    RewriteRule ^admin/tokens/?$                admin/tokens.html                [L]
+    RewriteRule ^admin/security/?$              admin/security.html              [L]
+
+    # Keep static assets and real files/dirs untouched.
+    RewriteRule ^assets/ - [L]
+    RewriteRule ^api/ - [L]
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Common typo support.
+    RewriteRule ^loign/?$ https://cybercomander.net/login [R=301,L]
+
+    # Friendly routes.
+    RewriteRule ^$ index.html [L]
+    RewriteRule ^login/?$ login.html [L]
+    RewriteRule ^home/?$ home.html [L]
+</IfModule>
+
+<FilesMatch "\.(env|ini|log|sql)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "no-referrer"
+    Header always set Permissions-Policy "geolocation=(), camera=(), microphone=()"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+</IfModule>

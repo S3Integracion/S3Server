@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Portal S3Integracion | Acceso</title>
+    <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body class="login-body">
+    <div class="ambient-layer" aria-hidden="true">
+        <span class="orb orb-a"></span>
+        <span class="orb orb-b"></span>
+        <span class="orb orb-c"></span>
+        <span class="grid-wash"></span>
+    </div>
+
+    <main class="page-wrap auth-shell">
+        <section class="panel auth-panel reveal">
+            <p class="kicker">Portal S3Integracion</p>
+            <h1>Acceso corporativo</h1>
+            <p class="lead">Ingresa con tu identidad empresarial para continuar.</p>
+
+            <form id="loginForm" class="auth-form" novalidate>
+                <label for="identifier">Usuario o correo</label>
+                <input id="identifier" name="identifier" type="text" autocomplete="username" maxlength="190" required>
+
+                <label for="password">Contrasena</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="255" required>
+
+                <button type="submit" id="loginButton" class="btn btn-primary btn-block">Entrar al portal</button>
+            </form>
+
+            <p id="statusMessage" class="status-message" role="status" aria-live="polite"></p>
+            <p class="auth-note">Acceso exclusivo para colaboradores autorizados.</p>
+            <a class="inline-link" href="/">Volver a la bienvenida</a>
+        </section>
+    </main>
+    <script src="/assets/js/login.js" defer></script>
+</body>
+</html>

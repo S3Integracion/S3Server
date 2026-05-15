@@ -1,0 +1,38 @@
+# Entorno y secretos
+.env
+.env.*
+!.env.example
+
+# Configuración local de herramientas
+.claude/
+
+# Backups y dumps
+backups/
+*.bak
+*.backup
+*.dump
+
+# Bloqueo total de SQL
+*.sql
+**/*.sql
+mysql/
+docs/sql/
+
+# Logs
+*.log
+api/storage/logs/*
+!api/storage/logs/.gitkeep
+
+# Temporales
+api/storage/tmp/*
+!api/storage/tmp/.gitkeep
+
+# GitHub Actions no debe publicar artefactos locales
+s3server-clean-no-sql.tar.gz
+*.tar.gz
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
