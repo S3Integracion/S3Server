@@ -58,7 +58,7 @@ jobs:
 
   deploy:
     name: Deploy production
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, s3server]
     needs:
       - block-sql
       - validate-php
@@ -69,40 +69,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install rsync
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y rsync
-
-      - name: Configure SSH
-        shell: bash
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-
-          printf '%s\n' "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-
-          printf '%s\n' "${{ secrets.SERVER_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
-
       - name: Verify deploy user has no SQL access
         shell: bash
         run: |
-          ssh \
-            -i ~/.ssh/deploy_key \
-            -p "${{ secrets.SERVER_PORT }}" \
-            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
-            'test ! -r /var/www/mysql && test ! -r /var/www/backups && test ! -r /var/www/docs/sql && test ! -r /srv/s3server-private/sql'
+          set -e
+          test ! -r /var/www/mysql
+          test ! -r /var/www/backups
+          test ! -r /var/www/docs/sql
+          test ! -r /srv/s3server-private/sql
 
       - name: Create code-only backup before deploy
         shell: bash
         run: |
-          ssh \
-            -i ~/.ssh/deploy_key \
-            -p "${{ secrets.SERVER_PORT }}" \
-            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
-            'mkdir -p ~/deploy-backups && tar --exclude="api/storage/logs" --exclude="api/storage/tmp" --exclude="docs/sql" --exclude="*.sql" -czf ~/deploy-backups/s3server-code-before-${{ github.sha }}.tgz -C /var/www api html docs'
+          mkdir -p ~/deploy-backups
+          tar --exclude='api/storage/logs' --exclude='api/storage/tmp' --exclude='docs/sql' --exclude='*.sql' \
+            -czf ~/deploy-backups/s3server-code-before-${{ github.sha }}.tgz -C /var/www api html docs
 
       - name: Deploy API
         shell: bash
@@ -116,8 +97,7 @@ jobs:
             --exclude='**/*.sql' \
             --exclude='storage/logs/' \
             --exclude='storage/tmp/' \
-            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SERVER_PORT }}" \
-            ./api/ "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/api/"
+            ./api/ /var/www/api/
 
       - name: Deploy HTML
         shell: bash
@@ -125,8 +105,7 @@ jobs:
           rsync -az --delete --delay-updates --chmod=D755,F644 \
             --exclude='*.sql' \
             --exclude='**/*.sql' \
-            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SERVER_PORT }}" \
-            ./html/ "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/html/"
+            ./html/ /var/www/html/
 
       - name: Deploy docs without SQL
         shell: bash
@@ -135,19 +114,20 @@ jobs:
             --exclude='sql/' \
             --exclude='*.sql' \
             --exclude='**/*.sql' \
-            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SERVER_PORT }}" \
-            ./docs/ "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/docs/"
+            ./docs/ /var/www/docs/
+
+      - name: Restore storage permissions
+        shell: bash
+        run: |
+          chmod -R 775 /var/www/api/storage/logs /var/www/api/storage/tmp || true
 
       - name: Smoke check
         shell: bash
         run: |
-          ssh \
-            -i ~/.ssh/deploy_key \
-            -p "${{ secrets.SERVER_PORT }}" \
-            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
-            'test -f /var/www/html/index.html &&
-             test -f /var/www/api/public/index.php &&
-             test ! -r /var/www/mysql &&
-             test ! -r /var/www/backups &&
-             test ! -r /var/www/docs/sql &&
-             test ! -r /srv/s3server-private/sql'
+          set -e
+          test -f /var/www/html/index.html
+          test -f /var/www/api/public/index.php
+          test ! -r /var/www/mysql
+          test ! -r /var/www/backups
+          test ! -r /var/www/docs/sql
+          test ! -r /srv/s3server-private/sql
